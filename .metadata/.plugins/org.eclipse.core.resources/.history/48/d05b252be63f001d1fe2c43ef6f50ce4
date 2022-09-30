@@ -1,0 +1,10 @@
+package com.project.usecase;
+
+public class RegisterHodAndEmploy {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

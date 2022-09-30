@@ -1,0 +1,41 @@
+package com.project.usecase;
+
+import java.util.Scanner;
+import com.project.been.Staff;
+import com.project.dao.StaffDao;
+import com.project.dao.StaffDaoImpl;
+import com.project.exception.StaffException;
+
+public class Login {
+
+	public static void main(String[] args) {
+        Scanner sc= new Scanner(System.in);
+		
+		System.out.println("Enter Username:");
+		String uname = sc.next();
+		
+		System.out.println("Enter Password:");
+		String pass = sc.next();
+		
+		StaffDao dao = new StaffDaoImpl();
+		
+		try {
+			Staff staff= dao.loginStaff(uname, pass);
+		
+	 		System.out.println("Welcome Student :"+staff.getName());
+	 	
+	 	
+		}catch (StaffException e) {
+			System.out.println(e.getMessage());
+		}
+		
+		
+		
+		
+		
+		
+	}
+
+	}
+
+

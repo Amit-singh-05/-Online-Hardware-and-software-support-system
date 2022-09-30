@@ -1,0 +1,4 @@
+INDEX VERSION 1.131+C:\Users\ami9s\OneDrive\Desktop\CWWS\.metadata\.plugins\org.eclipse.jdt.core
+1865797976.index
+1074523972.index
+4125803734.index
