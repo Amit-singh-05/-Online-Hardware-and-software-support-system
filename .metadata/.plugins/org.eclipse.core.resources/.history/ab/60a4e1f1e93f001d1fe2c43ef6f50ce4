@@ -1,0 +1,46 @@
+package com.project.usecase;
+
+import java.util.Scanner;
+
+import com.project.been.Staff;
+import com.project.dao.StaffDao;
+import com.project.dao.StaffDaoImpl;
+
+public class RegisterHodAndEmploy {
+
+	public static void main(String[] args) {
+        Scanner sc= new Scanner(System.in);
+		
+		System.out.println("Enter Staff Name:");
+		String name= sc.next();
+		
+		System.out.println("Enter Staff jobroll:");
+		String jobroll= sc.next();
+		
+		System.out.println("Enter Staff username/email:");
+		String username= sc.next();
+		
+		System.out.println("Enter Staff password:");
+		String password= sc.next();
+		
+		StaffDao dao=new StaffDaoImpl();
+		
+		Staff staff= new Staff();
+		if(jobroll.equals("Employee")||jobroll.equals("HOD")) {
+		staff.setName(name);
+		staff.setJobroll(jobroll);
+		staff.setUsername(username);
+		staff.setPassword(password);
+		}
+		
+		
+		
+		String result= dao.registerstaff(staff);
+		
+		System.out.println(result);
+		System.out.println(staff);
+
+	}
+
+}
+//(jobroll.equals("Employee")||jobroll.equals("HOD")||jobroll.equals("employee")||jobroll.equals("hod")||jobroll.equals("EMPLOYEE")||jobroll.equals("Hod"))

@@ -1,0 +1,118 @@
+package com.project.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.project.been.Staff;
+import com.project.dbconnection.DBconnect;
+import com.project.exception.StaffException;
+
+public class StaffDaoImpl implements StaffDao {
+
+	@Override
+	public String registerstaff(Staff staff) {
+		String message = "Not Inserted..";
+		
+		try(Connection conn= DBconnect.provideConnection()) {
+		
+		PreparedStatement ps= conn.prepareStatement
+				("insert into members_of_organization values(?,?,?,?,?)");
+		
+		
+		
+		ps.setString(1, staff.getUsername());
+		ps.setString(2, staff.getPassword());
+		ps.setString(3, staff.getJobroll());
+		ps.setString(4, staff.getName());
+		ps.setString(5, staff.getCategory());
+		
+		int x= ps.executeUpdate();
+		
+		
+		if(x > 0)
+			message = "Member Registered Sucessfully !";
+		
+		
+		
+	} catch (SQLException e) {
+		message = e.getMessage();
+	}
+		
+		
+		return message;
+	}
+
+	@Override
+	public Staff loginStaff(String username, String password) throws StaffException {
+		Staff staff = null;
+		
+		try(Connection conn = DBconnect.provideConnection()) {
+			PreparedStatement ps= conn.prepareStatement("select * from members_of_organization where username = ? AND password = ?");			
+			
+			ps.setString(1, username);
+			ps.setString(2, password);
+			
+			ResultSet rs= ps.executeQuery();
+			
+			if(rs.next()) {
+			
+			String uname = rs.getString("username");
+			String upassword= rs.getString("password");
+			String jobroll= rs.getString("jobroll");
+			String name= rs.getString("name");
+			String category = rs.getString("category");
+			
+			
+		staff=new Staff(uname, upassword, jobroll, name, category);	
+			
+			
+		}else {
+			throw new StaffException("Invalid Username or password.. ");
+		}
+			
+		}catch (SQLException e) {
+			throw new StaffException(e.getMessage());
+			}
+		
+		return staff;
+	}
+
+	@Override
+	public List<Staff> getAllEnginner() throws StaffException {
+		List<Staff> staff2= new ArrayList<>();
+		
+		try(Connection conn= DBconnect.provideConnection()) {
+					
+					PreparedStatement ps= conn.prepareStatement("select * from members_of_organization where category is not null");
+					
+					ResultSet rs= ps.executeQuery();
+					
+					while(rs.next()) {
+		
+						String uname = rs.getString("username");
+						String upassword= rs.getString("password");
+						String jobroll= rs.getString("jobroll");
+						String name= rs.getString("name");
+						String category = rs.getString("category");
+						
+						
+					Staff staff=new Staff(uname, upassword, jobroll, name, category);	
+						
+					staff2.add(staff);
+					}
+				} catch (SQLException e) {
+					throw new StaffException(e.getMessage());
+				}
+		
+		if(staff2.size() == 0) {
+			throw new StaffException("No Engineer found..");
+		}
+			
+		return staff2;
+	}
+
+}
