@@ -1,0 +1,180 @@
+package com.project.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.project.been.ComplaintTable;
+import com.project.dbconnection.DBconnect;
+import com.project.exception.StaffException;
+
+public class SomplainDaoImpl implements SomplainDao {
+
+	@Override
+	public List<ComplaintTable> getAllComplaint() throws StaffException {
+    List<ComplaintTable> complaint2= new ArrayList<>();
+		
+		try(Connection conn= DBconnect.provideConnection()) {
+					
+					PreparedStatement ps= conn.prepareStatement("select * from complaint");
+					
+					ResultSet rs= ps.executeQuery();
+					
+					while(rs.next()) {
+		
+						int complaint_id = rs.getInt("complaint_id");
+						String complaint_by = rs.getString("complaint_by");
+						String complain = rs.getString("complain");
+						String assigned_engineer = rs.getString("assigned_engineer");
+						String complaint_status  = rs.getString("complaint_status");
+						
+						
+						ComplaintTable complaint=new ComplaintTable(complaint_id, complaint_by , complain , assigned_engineer , complaint_status );	
+						
+						complaint2.add(complaint);
+					}
+				} catch (SQLException e) {
+					throw new StaffException(e.getMessage());
+				}
+		
+		if(complaint2.size() == 0) {
+			throw new StaffException("No complaint found..");
+		}
+			
+		return complaint2;
+	}
+
+	@Override
+	public String assignEngineer(String engineer,int Complaint_id) throws StaffException {
+		String message = "Engineer not assigned..";
+		
+		
+		try(Connection conn= DBconnect.provideConnection()) {
+			
+			PreparedStatement ps= conn.prepareStatement
+					("update complaint set assigned_engineer = ? where complaint_id = ?");
+			
+			
+			
+			ps.setString(1,engineer);
+			ps.setInt(2, Complaint_id);
+			
+			
+			int x= ps.executeUpdate();
+			
+			
+			if(x > 0)
+				message = "Engineer assigned.. !";
+			
+			
+			
+		} catch (SQLException e) {
+			message = e.getMessage();
+		}
+		return message;
+	}
+
+	@Override
+	public String registercomplain(ComplaintTable complain) {
+	String message = "Complain not registered..";
+		
+		try(Connection conn= DBconnect.provideConnection()) {
+		
+		PreparedStatement ps= conn.prepareStatement
+				("insert into complaint (complaint_by,complain) values(?,?)");
+		
+		
+		
+		ps.setString(1, complain.getComplaint_by());
+		ps.setString(2, complain.getComplain());
+		
+		
+		int x= ps.executeUpdate();
+		
+		
+		if(x > 0)
+			message = "Complain Registered Sucessfully !";
+		
+		
+		
+	} catch (SQLException e) {
+		message = e.getMessage();
+	}
+		
+		
+		return message;
+	}
+
+
+
+	@Override
+	public List<ComplaintTable> getComplaintbyme(String s) throws StaffException {
+	List<ComplaintTable> complaint3= new ArrayList<>();
+		
+		try(Connection conn= DBconnect.provideConnection()) {
+					
+					PreparedStatement ps= conn.prepareStatement("select * from complaint where complaint_by = ?");
+					ps.setString(1, s);
+					ResultSet rs= ps.executeQuery();
+					
+					while(rs.next()) {
+		
+						int complaint_id = rs.getInt("complaint_id");
+						String complaint_by = rs.getString("complaint_by");
+						String complain = rs.getString("complain");
+						String assigned_engineer = rs.getString("assigned_engineer");
+						String complaint_status  = rs.getString("complaint_status");
+						
+						
+						
+						ComplaintTable complaint=new ComplaintTable(complaint_id, complaint_by , complain , assigned_engineer , complaint_status );	
+						
+						complaint3.add(complaint);
+					}
+				} catch (SQLException e) {
+					throw new StaffException(e.getMessage());
+				}
+		
+		if(complaint3.size() == 0) {
+			throw new StaffException("No complaint found..");
+		}
+			
+		return complaint3;
+	}
+
+	@Override
+	public ComplaintTable getcomplainbyid(int complainid) throws StaffException {
+		ComplaintTable c1 =null;
+		
+		try(Connection conn= DBconnect.provideConnection()) {
+			
+			PreparedStatement ps= conn.prepareStatement("select * from complaint where complaint_id = ?");
+
+			ps.setInt(1, complainid);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			if(rs.next()) {
+				
+				int complaint_id = rs.getInt("complaint_id");
+				String complaint_by = rs.getString("complaint_by");
+				String complain = rs.getString("complain");
+				String assigned_engineer = rs.getString("assigned_engineer");
+				String complaint_status  = rs.getString("complaint_status");
+			
+				c1=new ComplaintTable(complaint_id, complaint_by , complain , assigned_engineer , complaint_status );	
+			}else {
+				throw new StaffException("This complaint id does not exist");
+			}
+			
+		} catch (SQLException e) {
+            e.printStackTrace();
+			throw new StaffException(e.getMessage());
+		}
+		return c1;
+	}
+
+}

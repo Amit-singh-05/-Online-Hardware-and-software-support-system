@@ -1,0 +1,43 @@
+package com.project.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import com.project.been.Staff;
+import com.project.dbconnection.DBconnect;
+
+public class StaffDaoImpl implements StaffDao {
+
+	@Override
+	public String registerstaff(Staff staff) {
+		String message = "Not Inserted..";
+		
+		try(Connection conn= DBconnect.provideConnection()) {
+		
+		PreparedStatement ps= conn.prepareStatement
+				("insert into members_of_organization(username,password,jobroll,name) values(?,?,?,?)");
+		
+		
+		
+		ps.setString(1, staff.getUsername());
+		ps.setString(2, staff.getPassword());
+		ps.setString(3, staff.getJobroll());
+		ps.setString(4, staff.getName());
+		
+		int x= ps.executeUpdate();
+		
+		
+		if(x > 0)
+			message = "Member Registered Sucessfully !";
+		
+		
+		
+	} catch (SQLException e) {
+		message = e.getMessage();
+	}
+		
+		
+		return message;
+	}
+
+}

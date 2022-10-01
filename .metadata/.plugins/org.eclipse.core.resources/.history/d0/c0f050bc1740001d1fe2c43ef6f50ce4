@@ -1,0 +1,7 @@
+package com.project.dao;
+
+import com.project.been.Staff;
+
+public interface StaffDao {
+	public String registerstaff(Staff staff);
+}
