@@ -1,0 +1,43 @@
+show databases;
+
+create database Online_Hardware_and_software_support_system;
+
+show databases;
+
+use Online_Hardware_and_software_support_system;
+
+create table job_roll(
+jobroll varchar(30) primary key
+);
+
+insert into job_roll value('HOD');
+insert into job_roll value('Employee');
+insert into job_roll value('Engineer');
+
+create table members_of_organization(
+username varchar(30) primary key,
+password varchar(30) not null,
+jobroll varchar(30) not null,
+name varchar(30) not null,
+FOREIGN KEY (jobroll) REFERENCES job_roll
+(jobroll)
+);
+
+alter table members_of_organization add category varchar(30);
+
+********************************************************************************************************
+insert into members_of_organization values('jon@gmail.com','123','Engineer','jon','hardware');
+insert into members_of_organization values('son@gmail.com','123','Engineer','son','software');
+insert into members_of_organization values('don@gmail.com','123','Engineer','don','hardware');
+insert into members_of_organization values('ron@gmail.com','123','Engineer','ron','software');
+
+delete from members_of_organization where username = 'ramesh@gmail.com';
+********************************************************************************************************
+
+create table complaint(
+complaint_id int primary key auto_increment,
+complaint_by varchar(30) not null,
+complain varchar(100) not null,
+assigned_engineer varchar(30),
+complaint_status varchar(30) 
+);
